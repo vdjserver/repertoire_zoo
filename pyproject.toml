@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "repertoire_zoo"
+version = "0.0.1"
+authors = [
+  { name="Sam Wollenburg", email="Samuel.Wollenburg@UTSouthwestern.edu" },
+]
+description = "A Collection of animal-themed repertoire analysis tools."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "airr",
+  "matplotlib",
+  "numpy",
+  "pandas",
+  "pycirclize",
+  "seaborn",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+
+[project.urls]
+Homepage = "https://github.com/vdjserver/repertoire_zoo"
+Issues = "https://github.com/vdjserver/issues/issues?q=label%3A%22repertoire%20zoo%22"
