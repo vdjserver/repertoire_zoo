@@ -947,7 +947,7 @@ def load_and_prepare_clonal_abundance_data(data_dir, repertoires, clone_tool='re
         if internal:
             df['sample_id'] = sample_id
         dfs.append(df)
-    df = pd.concat(dfs, ignore_index=True)    
+    df = pd.concat(dfs, ignore_index=True)
     return df
 
 def load_and_prepare_clonal_abundance_group_data(data_dir, groups, all_groups, all_repertoires, clone_tool='repcalc', processing_stage='igblast.allele.clone'):
