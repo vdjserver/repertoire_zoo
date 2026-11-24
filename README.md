@@ -5,6 +5,7 @@ A set of python modules for repertoire analysis.
 # Table of Contents
 
 - [Installation](#installation)
+- [Analysis Templates](#analysis-templates)
 - [Modules](#modules)
   - [bird: Bring in Repertoire Data](#bird--bring-in-repertoire-data)
   - [giraffe: Graphical Interactive Repertoire Analysis with Fast Feature Exploration)](#giraffe--graphical-interactive-repertoire-analysis-with-fast-feature-exploration)
@@ -12,6 +13,60 @@ A set of python modules for repertoire analysis.
 - [License](#license)
 
 # Installation
+
+# Analysis Templates
+
+Analysis templates are installed with the package. These interative Python Jupyter notebooks provide an overview analysis of data returned from RepCalc. These notebooks show how data is read into a dataframe via the `bird` module and then graphed with the `giraffe` module. Each analysis template's functionality is listed below. To find these templates, utilize the following:
+```
+from importlib.resources import files
+
+templates = files("repertoire_zoo").joinpath("analysis")
+print(list(templates.iterdir()))
+```
+- `cdr3_template.ipynb`
+  - Bar graphs of CDR3 length
+  - Amino acid sharing
+  - Sequence count
+  - Unique number of sequences
+- `clonality_template.ipynb`
+  - Abundance
+  - Cumulative abundance
+  - Expansion
+  - Diversity curve
+  - Normalized Shannon entropy
+- `gene_usage_template.ipynb`
+  - V
+    - Bar graphs of V family frequency
+    - Heat maps
+      - Raw data
+      - Absolute difference per family (unpaired axis)
+      - Normalized difference
+  - J
+    - Bar graphs of J family frequency
+    - Heat maps
+      - Raw data
+      - Absolute difference per family (unpaired axis)
+      - Normalized difference
+  - VJ Combo
+    - Chord diagram of VJ gene pairing
+- `mutations_template.ipynb`
+  - Hedgehog of overall replacement frequency
+  - Heatmaps
+    - Mutation frequency in FWR
+    - Mutation frequency in CDR
+    - Mutation ratio in FWR
+    - Mutation ratio in CDR
+  - Bar graphs
+    - Mutation ratio in FWR
+    - Mutation ratio in CDR
+    - Mutation RS ratio in FWR
+    - Mutation RS ratio in CDR
+  - Tables
+    - Mutation RS ratio in FWR
+    - Mutation RS ratio in CDR
+    - Mutation ratio
+    - Mutation frequency
+    - Mutation ratio and RS ratio
 
 # Modules
 
