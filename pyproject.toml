@@ -26,6 +26,9 @@ classifiers = [
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
 
+[tool.setuptools.package-data]
+repertoire_zoo = ["analysis/*.ipynb"]
+
 [project.urls]
 Homepage = "https://github.com/vdjserver/repertoire_zoo"
 Issues = "https://github.com/vdjserver/issues/issues?q=label%3A%22repertoire%20zoo%22"
