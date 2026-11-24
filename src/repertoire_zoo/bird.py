@@ -370,6 +370,7 @@ def load_and_prepare_data_junction_aa(
     df_combined : pd.DataFrame
         - Combined DataFrame with columns: `CDR3_LENGTH`, `CDR3_COUNT`, `CDR3_RELATIVE`.
     """
+    df_combined = pd.DataFrame()
     dfs = []
     if groups is not None:
         for group_id, condition_name, *_ in groups:
@@ -770,6 +771,7 @@ def load_shared_cdr3_aa_data(
             for j in percentage_matrix.columns:
                 # Calculate percentage of shared overlap
                 shared_cdr3s = df.at[i, j]
+                total_cdr3s_i = np.nan
                 if similarity_metric == 'jaccard':
                     if shared_cdr3s == 0:
                         percentage_matrix.at[i, j] = 0
@@ -931,6 +933,8 @@ def load_and_prepare_group_summary_comparison(
 def load_and_prepare_clonal_abundance_data(data_dir, repertoires, clone_tool='repcalc', processing_stage='igblast.allele.clone', internal=False):
     dfs = []
     for repertoire_id, condition_name, sample_id in repertoires:
+        path = ''
+        col = ''
         if clone_tool == 'repcalc':
             path = f"{data_dir}{repertoire_id}.{processing_stage}.count.tsv"
             col = 'copy_freq'
