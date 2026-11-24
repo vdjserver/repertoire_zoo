@@ -23,6 +23,7 @@ Import this module and call the desired functions with appropriate arguments.
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
+from matplotlib.text import Text
 import numpy as np
 import pandas as pd
 from pycirclize import Circos
