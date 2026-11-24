@@ -28,6 +28,106 @@ import pandas as pd
 from pycirclize import Circos
 import seaborn as sns
 
+# Helper Functions for plotting
+# for heatmaps
+def norm_cols(matrix, norm_type='difference'):
+    control_values = matrix.iloc[0, :]  # take first column as control
+    if norm_type == 'fc':
+        return (matrix.sub(control_values, axis=1)).div(control_values, axis=1)
+    if norm_type == 'l2fc':
+        return np.log2(matrix.div(control_values, axis=1)) # log2fc
+    if norm_type == 'difference':
+        return matrix.sub(control_values, axis=1)
+    return matrix
+
+# for heatmaps
+def make_annotation_mat(matrix, standardized_matrix, round_mat=2, round_std_mat=2):
+    # Now round and convert to string
+    return matrix.round(round_mat).astype(str) + '\n(' + standardized_matrix.round(round_std_mat).astype(str) +')'
+
+def add_N_to_legend(ax, groups_tuple):
+    condition_counts = {e[1] : len(e[2]) for e in groups_tuple}
+    handles, lables = ax.get_legend_handles_labels()
+    new_labels = [f'{condition}, N={int(condition_counts[condition])}' for condition in lables]
+    ax.legend(handles, new_labels, title='Group', loc='center left', bbox_to_anchor=(1, 0.5))
+
+def add_N_to_xaxis(ax, groups_tuple):
+    condition_counts = {e[1] : len(e[2]) for e in groups_tuple}
+    labels = ax.get_xticklabels()
+    new_labels = [Text(l.get_position()[0], l.get_position()[1], f'{l.get_text()}\nN={int(condition_counts[l.get_text()])}') for l in labels]
+    ax.set_xticklabels(new_labels)
+
+def add_N_to_yaxis(ax, groups_tuple):
+    condition_counts = {e[1] : len(e[2]) for e in groups_tuple}
+    labels = ax.get_yticklabels()
+    new_labels = [Text(l.get_position()[0], l.get_position()[1], f'{l.get_text()}\nN={int(condition_counts[l.get_text()])}') for l in labels]
+    ax.set_xticklabels(new_labels)
+
+def generate_colormap(base_colors, all_names=None, n_shades=7, min_light=0, max_light=0.7):
+    """
+    Generate a dictionary of colors where each base color has n_shades variants
+    going from dark to light, excluding white.
+
+    Parameters
+    ----------
+    base_colors : dict
+        Mapping of base condition name to base color (e.g., {'A': 'red', 'B': 'blue'}).
+    n_shades : int
+        Number of shades per base color.
+    min_light : float
+        Minimum lightness factor (0 = black, 1 = white).
+    max_light : float
+        Maximum lightness factor (0 = black, 1 = white).
+
+    Returns
+    -------
+    dict : {condition_name: hex_color}
+    """
+    cmap_dict = {}
+
+    for i, base in enumerate(base_colors):
+        base_rgb = np.array(mcolors.to_rgb(base))
+        for ii, factor in enumerate(np.linspace(min_light, max_light, n_shades)):
+            # base_rgb * (1-factor) -> responsible for color being removed
+            # np.ones(3) * factor -> responsible for the color interpolating to white
+            shade_rgb = base_rgb * (1-factor) + (np.ones(3) * factor)
+            
+            cmap_dict[f"{all_names[i*n_shades+ii]}"] = mcolors.to_hex(shade_rgb)
+
+    return cmap_dict
+
+def show_colormap(color_cmap, ax=None, xtick_labels=True, xtick_height=-0.3):
+    """
+    Display colors associated in a color_cmap dictionary.
+
+    Parameters
+    ----------
+    color_cmap : dict
+        Dictionary mapping labels to color values (e.g., {'A': 'red', 'B': '#00FF00'}).
+    """
+    labels = list(color_cmap.keys())
+    colors = list(color_cmap.values())
+
+    # Create a figure
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(len(labels), 1))
+    else:
+        fig = ax.get_figure()
+
+    for i, color in enumerate(colors):
+        ax.add_patch(plt.Rectangle((i, 0), 1, 1, color=color))
+        if xtick_labels: ax.text(i + 0.5, xtick_height, labels[i], ha='center', va='center', fontsize=10, rotation=90)
+
+    ax.set_xlim(0, len(colors))
+    ax.set_ylim(0, 1)
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+    return fig, ax
+
+# Plotting functions
 # Gene Usage
 def plot_gene_usage_groups(
         df_combined: pd.DataFrame,
